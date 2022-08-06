@@ -1,0 +1,165 @@
+@import "styles/config.sass"
+
+.log
+	margin: 10px
+	padding: 7px 30px 0 7px
+	position: relative
+	overflow: hidden
+	background-color: $log_background_color
+	&.critical
+		border-left: 15px solid $critical
+	&.error
+		border-left: 15px solid $error
+	&.warning
+		border-left: 15px solid $warning
+	&.info
+		border-left: 15px solid $info
+	&.notice
+		border-left: 15px solid $notice
+	a.pin
+		background: $pin_icon no-repeat center center
+		position: absolute
+		top: 5px
+		right: 5px
+		width: 16px
+		height: 16px
+	a.report
+		background: $report_icon no-repeat center center
+		position: absolute
+		top: 30px
+		right: 5px
+		width: 16px
+		height: 16px
+	div.timestamp
+		padding: 5px 5px 0 5px
+		font-size: 12px
+	div.referrer
+		font-size: 12px
+		overflow: hidden
+		padding: 5px
+	div.stack_trace
+		margin: 0 0 0 8px
+		cursor: pointer
+		div.identifying-info
+			background-color: #ccc
+			background-color: #333
+			color: #fff
+			height: 22px
+			line-height: 22px
+			> div
+				display: inline-block
+				height: 22px
+			div.module
+				padding-left: 20px
+				background: $stack_trace_arrow
+			div.function
+				padding-left: 20px
+				background: $stack_trace_arrow
+				margin-left: 10px
+			div.line_number
+				padding: 0 10px
+				background-color: #666666
+				width: 65px
+				color: #fff
+				margin-right: 10px
+				text-align: right
+		// div.stack-trace-line.odd
+		// 	div.identifying-info
+		// 		background-color: #444
+		// 		div.line-number
+		// 			background-color: #777
+		div.statement
+			padding-left: 30px
+			display: inline-block
+			margin-left: -9px
+			padding: 5px 5px 5px 30px
+
+	div.message
+		overflow: auto
+		padding: 8px
+		.rendered
+			position: relative
+			li
+				overflow: hidden
+				line-height: 20px
+				display: none
+				clear: left
+				&:nth-child(-n+3)
+					display: block
+				&:last-child span.comma
+					display: none
+			span.comma
+				color: $rendered_object_comma_color
+			div.key, div.value
+				float: left
+				margin: 0
+				padding: 0
+				vertical-align: middle   
+				line-height: 22px 
+			div.key
+				color: $rendered_object_key_color
+				margin-right: 5px
+				position: relative
+				cursor: default
+				.icon
+					cursor: default                
+				&.array 
+					cursor: pointer
+					.icon
+						background: $array_icon no-repeat top left
+						cursor: pointer
+				&.object 
+					cursor: pointer
+					.icon
+						background: $object_icon no-repeat top left
+						cursor: pointer
+				&.expanded > .icon
+					background-position: bottom left
+				&.empty
+					.icon
+						background-position: top right
+
+			div.icon
+				width: 19px
+				height: 19px
+				position: absolute
+				top: 2px
+				right: -22px
+				cursor: pointer
+			
+			div.value
+				color: $rendered_object_value_color
+				margin-right: 10px
+
+			.rendered.collapsed
+				display: none
+
+			&.expanded
+				clear: left
+				li
+					display: block
+
+		div.toggle
+			cursor: pointer
+			margin-left: 50%
+			height: 30px
+			width: 30px
+			background: $toggle_icon_more no-repeat center center
+			&.expanded
+				background: $toggle_icon_x no-repeat center center
+
+		.truncated_message
+			cursor: pointer
+			padding-bottom: 20px
+			background: $toggle_icon_more no-repeat bottom center
+			&.expanded
+				background: $toggle_icon_x no-repeat bottom center
+
+		div.text
+
+	&.even
+		background-color: $log_background_color_alt
+
+.pinned
+	a.pin
+		background: image-url('x.png') no-repeat center center

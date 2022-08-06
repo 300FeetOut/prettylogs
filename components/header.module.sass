@@ -1,0 +1,182 @@
+.header
+	position: fixed
+	top: 0
+	left: 0
+	height: 120px
+	width: 100%
+	z-index: 100
+	background: $filters_fade repeat-x top left
+	ul.levels
+		background: $filters_background_image repeat-x top left
+		float: left
+		margin: 0 10px 10px 10px
+		li
+			float: left
+			line-height: 63px
+			height: 75px
+			padding: 0 20px 0 30px
+			font-size: 16px
+			cursor: pointer
+			color: #fff
+			@media screen and (max-width: 1050px)
+				padding: 0 10px 0 25px
+				span
+					display: block
+					width: 1.6rem
+					overflow: hidden
+			label
+				cursor: pointer
+			&.active
+				background-image: $level_checkbox
+				background-repeat: no-repeat
+				background-position: 8px center
+			&:first-child
+				+border-bottom-left-radius(5px)
+			&:last-child
+				+border-bottom-right-radius(5px)
+			&.active
+				background-image: $level_checkbox
+			&.error_level
+				background-color: $error
+				border-top: 12px solid darken($error, 20%)
+				&:hover
+					background-color: darken($error, 10%)
+			&.warning_level
+				background-color: $warning
+				border-top: 12px solid darken($warning, 20%)
+				&:hover
+					background-color: darken($warning, 10%)
+			&.info_level
+				background-color: $info
+				border-top: 12px solid darken($info, 20%)
+				&:hover
+					background-color: darken($info, 10%)
+			&.notice_level
+				background-color: $notice
+				border-top: 12px solid darken($notice, 20%)
+				&:hover
+					background-color: darken($notice, 10%)
+			&.critical_level
+				background-color: $critical
+				border-top: 12px solid darken($critical, 20%)
+				&:hover
+					background-color: darken($critical, 10%)            
+
+	div.regex_filters
+		float: left
+		width: 250px
+		margin: 0 0 0 10px
+		position: relative
+		div.drawer
+			padding: 0 10px 0 10px
+			z-index: 1
+			background-color: $regex_drawer_background_color
+			+border-bottom-radius(4px)
+			background-color: #eee
+			div.drawer_toggle
+				background: $regex_drawer_toggle_down no-repeat center center
+				height: 20px
+				width: 100%
+				position: absolute
+				bottom: -20px
+				left: 0
+				cursor: pointer
+				&.open
+					background-image: $regex_drawer_toggle_up
+			header
+				overflow: hidden
+				border-bottom: 1px solid #ccc
+				margin-bottom: 5px
+				padding: 5px 0 3px 0
+				height: 24px
+				width: 230px
+				color: #333
+				div.regex
+					float: left
+				div.negate
+					float: right
+					margin-right: 40px
+
+			ul.saved
+				min-height: 1px
+				li
+					position: relative
+					color: $filter_text
+					cursor: pointer
+					height: 25px
+					margin-bottom: 2px
+					line-height: 25px
+					font-size: 14px
+					text-indent: 10px
+					div.regex
+						width: 150px
+					input.negate
+						position: absolute
+						top: 6px
+						right: 50px
+					div.delete 
+						background: $icon_delete no-repeat center center
+						width: 20px
+						height: 20px
+						position: absolute
+						top: 3px
+						right: 5px
+						display: none
+						cursor: pointer
+					div.edit
+						background: $icon_edit no-repeat center center
+						width: 20px
+						height: 20px
+						position: absolute
+						top: 3px
+						right: 25px
+						display: none
+						cursor: pointer
+					&:hover
+						div.delete, div.edit
+							display: block
+					&.active
+						background-color: $applied
+					&.editing
+						background: $editing
+
+			form.realtime
+				height: 36px
+				overflow: hidden
+				margin-top: 10px
+				position: relative
+				input.regex
+					width: 160px
+					&.valid
+						border-color: green
+					&.invalid
+						border-color: red
+				input.negate
+					position: absolute
+					top: 5px
+					left: 168px
+				input.button
+					position: absolute
+					right: 0
+					top: 0
+
+	div.admin
+		padding: 10px
+		label
+			color: #fff
+			font-size: 12px
+		input[type="checkbox"]
+			position: relative
+			top: 3px
+
+	div.options
+		padding: .5rem .5rem .5rem 1rem
+		float: left
+		ul
+			list-style: none
+			margin: 0
+			padding: 0
+			input
+				margin: .5rem
+				position: relative
+				top: .2rem
