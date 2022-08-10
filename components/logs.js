@@ -142,7 +142,7 @@ function Logs({logs, refetch, regex, negateRegex, levels}) {
 			}
 
 			return <div data-created={log.created} key={log._id} className={classNames(styles.log, styles[log.level])}>
-				<a className={styles.pin} title="Pin this log message" onClick={pin.bind(null, log)}>Pin</a>
+				<div className={styles.pin} title="Pin this log message" onClick={pin.bind(null, log)}>Pin</div>
 
 				<div className={styles.timestamp}>
 					<span className={styles.date}>{log.prepared.date}</span>

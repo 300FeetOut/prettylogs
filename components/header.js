@@ -6,6 +6,8 @@ import styles from './header.module.sass'
 
 import config from '../config'
 
+import Link from 'next/link'
+
 export default function Header({level, user, updateRegex, negateRegex, updateLevels}) {
 	const [levels, setLevels] = useState(config.levels)
 
@@ -29,7 +31,7 @@ export default function Header({level, user, updateRegex, negateRegex, updateLev
 			</div>
 
 			{user && <div className={styles.user}>
-				<a href="/api/auth/logout">Logout</a>
+				<Link href="/api/auth/logout"><a>Logout</a></Link>
 				<input title="Auth key" readOnly type="text" className={styles.key} value={user.key} onFocus={(e) => {
 					e.target.select()
 				}} onMouseUp={() => {return false}} />

@@ -1,7 +1,6 @@
-import { useState } from 'react'
-import classNames from 'classnames'
-
 import styles from './login.module.sass'
+
+import Link from 'next/link'
 
 export default function Login({level, user}) {
 	return (
@@ -14,7 +13,7 @@ export default function Login({level, user}) {
 				<div></div>
 			</div>
 			<div className={styles.login_content}>
-				<a href="/api/auth/login">Log in</a>
+				<Link href="/api/auth/login"><a>Log in</a></Link>
 			</div>
 		</div>
 	)
