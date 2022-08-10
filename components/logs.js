@@ -8,10 +8,12 @@ import config from '/config.js'
 
 import prettyPrint from "../lib/prettyPrint"
 
-function Logs({logs, refetch, regex, negateRegex, levels}) {
+function Logs({logs, refetch, regex, negateRegex, levels, pinned}) {
 	const logsRef = useRef(null)
 
 	useEffect(() => {
+		const logWrapper = logsRef.current
+
 		function onClick(e) {
 			const target = e.target
 
@@ -39,24 +41,27 @@ function Logs({logs, refetch, regex, negateRegex, levels}) {
 			}
 		}
 
-		logsRef.current.addEventListener('click', onClick)
+		logWrapper.addEventListener('click', onClick)
 
-		const interval = setInterval(() => {
-			if (!logsRef || !logsRef.current) {
-				return
-			}
-	
-			const logs = [...logsRef.current.querySelectorAll(`.${styles.log}`)]
-			const now = Date.now()
-	
-			logs.length && logs.map((log) => {
-				const percent = (now - log.dataset.created) / (1000 * 60 * 5 /*5 minutes*/)
-				log.style.opacity = 1 - percent
-			})
-		}, 1000)
+		let interval = null
+		if (!pinned) {
+			interval = setInterval(() => {
+				if (!logsRef || !logWrapper) {
+					return
+				}
+		
+				const logs = [...logWrapper.querySelectorAll(`.${styles.log}`)]
+				const now = Date.now()
+		
+				logs.length && logs.map((log) => {
+					const percent = (now - log.dataset.created) / (1000 * 60 * 5 /*5 minutes*/)
+					log.style.opacity = 1 - percent
+				})
+			}, 1000)
+		}
 
 		return () => {
-			logsRef.current.removeEventListener('click', onClick)
+			logWrapper.removeEventListener('click', onClick)
 			clearInterval(interval)
 		}
 	},[])
@@ -137,11 +142,11 @@ function Logs({logs, refetch, regex, negateRegex, levels}) {
 		{logs && logs.map((log) => {
 			prepareLog(log)
 
-			if (!matchesRegex(log) || !levels[log.level]) {
+			if (!matchesRegex(log) || (pinned && !levels[log.level])) {
 				return ''
 			}
 
-			return <div data-created={log.created} key={log._id} className={classNames(styles.log, styles[log.level])}>
+			return <div data-created={log.created} key={log._id} className={classNames(styles.log, styles[log.level], styles.pinned)}>
 				<div className={styles.pin} title="Pin this log message" onClick={pin.bind(null, log)}>Pin</div>
 
 				<div className={styles.timestamp}>

@@ -29,10 +29,10 @@ function LogsWrapper({project, regex, negateRegex, levels}) {
 
 	return <div className={styles.logs_wrapper}>
 		<div className={styles.logs}>
-			<Logs logs={logsQuery.data} refetch={refetch} regex={regex} negateRegex={negateRegex} levels={levels} />
+			<Logs logs={logsQuery.data} pinned={false} refetch={refetch} regex={regex} negateRegex={negateRegex} levels={levels} />
 		</div>
 		<div className={styles.pinned_logs}>
-			<Logs logs={pinnedLogsQuery.data} refetch={refetch} regex={regex} negateRegex={negateRegex} levels={levels} />
+			<Logs logs={pinnedLogsQuery.data} pinned={true} refetch={refetch} regex={regex} negateRegex={negateRegex} levels={levels} />
 		</div>
 	</div>
 }
