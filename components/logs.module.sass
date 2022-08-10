@@ -33,6 +33,8 @@
 	div.timestamp
 		padding: 5px 5px 0 5px
 		font-size: 12px
+		.from_now
+			margin-left: 10px
 	div.referrer
 		font-size: 12px
 		overflow: hidden
@@ -40,7 +42,7 @@
 	div.stack_trace
 		margin: 0 0 0 8px
 		cursor: pointer
-		div.identifying-info
+		div.identifying_info
 			background-color: #ccc
 			background-color: #333
 			color: #fff
@@ -63,11 +65,12 @@
 				color: #fff
 				margin-right: 10px
 				text-align: right
-		// div.stack-trace-line.odd
-		// 	div.identifying-info
-		// 		background-color: #444
-		// 		div.line-number
-		// 			background-color: #777
+
+		> div:nth-child(odd)
+			div.identifying_info
+				background-color: #444
+				div.line-number
+					background-color: #777
 		div.statement
 			padding-left: 30px
 			display: inline-block
@@ -77,6 +80,9 @@
 	div.message
 		overflow: auto
 		padding: 8px
+		ul
+			margin: 0 0 0 22px
+			padding: 0
 		.rendered
 			position: relative
 			li

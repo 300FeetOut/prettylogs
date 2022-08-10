@@ -37,3 +37,7 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 Auth0
 https://auth0.com/blog/ultimate-guide-nextjs-authentication-auth0/
+
+Todo:
+
+Maybe make ploge function that logs expanded automatically.

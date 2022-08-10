@@ -7,10 +7,16 @@ import {
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools"
 
 import Logs from '../components/logs'
+import Header from '../components/header'
+import Login from '../components/login'
 
+import { decrypt, encrypt } from '../lib/encryption'
 
 export default function Index() {
 	const { user, error, isLoading } = useUser()
+
+	// const encrypted = encrypt('google-oauth2|111822682839916165003')
+	// console.log('decrypted', decrypt(encrypted))
 
 	if (isLoading) return <div>Loading...</div>
 	if (error) return <div>{error.message}</div>
@@ -20,11 +26,11 @@ export default function Index() {
 	if (user) {
 		return (
 			<QueryClientProvider client={queryClient}>
-				Welcome {user.name}! <a href="/api/auth/logout">Logout</a>
+				<Header user={user}></Header>
 				<Logs project="62ed7a325c3793613596ffe7" />
 			</QueryClientProvider>
 		)
 	}
 
-	return <a href="/api/auth/login">Login</a>
+	return <Login></Login>
 }

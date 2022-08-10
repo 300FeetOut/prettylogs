@@ -60,7 +60,7 @@ class PrettyLogs {
         $data = json_encode($this->logs);
         $this->logs = array();
 
-        $ch = curl_init($this->url . '/api/intake?project=' . $this->project_name . '&auth=' . $this->auth);
+        $ch = curl_init($this->url . '/api/intake?project=' . $this->project_name . '&auth=' . urlencode($this->auth));
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);

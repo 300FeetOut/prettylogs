@@ -1,3 +1,6 @@
+@import "styles/config.sass"
+@import "styles/buttons.sass"
+
 .header
 	position: fixed
 	top: 0
@@ -6,13 +9,16 @@
 	width: 100%
 	z-index: 100
 	background: $filters_fade repeat-x top left
+	display: flex
 	ul.levels
 		background: $filters_background_image repeat-x top left
-		float: left
 		margin: 0 10px 10px 10px
+		list-style: none
+		padding: 0
+		display: flex
 		li
-			float: left
-			line-height: 63px
+			display: flex
+			align-items: center
 			height: 75px
 			padding: 0 20px 0 30px
 			font-size: 16px
@@ -31,9 +37,9 @@
 				background-repeat: no-repeat
 				background-position: 8px center
 			&:first-child
-				+border-bottom-left-radius(5px)
+				border-bottom-left-radius: 5px
 			&:last-child
-				+border-bottom-right-radius(5px)
+				border-bottom-right-radius: 5px
 			&.active
 				background-image: $level_checkbox
 			&.error_level
@@ -60,19 +66,19 @@
 				background-color: $critical
 				border-top: 12px solid darken($critical, 20%)
 				&:hover
-					background-color: darken($critical, 10%)            
+					background-color: darken($critical, 10%)
 
 	div.regex_filters
-		float: left
-		width: 250px
+		width: 300px
 		margin: 0 0 0 10px
 		position: relative
 		div.drawer
 			padding: 0 10px 0 10px
 			z-index: 1
 			background-color: $regex_drawer_background_color
-			+border-bottom-radius(4px)
+			border-bottom-radius: 4px
 			background-color: #eee
+			position: relative
 			div.drawer_toggle
 				background: $regex_drawer_toggle_down no-repeat center center
 				height: 20px
@@ -89,25 +95,29 @@
 				margin-bottom: 5px
 				padding: 5px 0 3px 0
 				height: 24px
-				width: 230px
 				color: #333
 				div.regex
 					float: left
 				div.negate
 					float: right
-					margin-right: 40px
+					margin-right: 65px
 
 			ul.saved
-				min-height: 1px
+				overflow: hidden
+				margin: 0
+				padding: 0
+				&.collapsed
+					height: 0
 				li
 					position: relative
 					color: $filter_text
 					cursor: pointer
+					transition: height .35s
 					height: 25px
-					margin-bottom: 2px
 					line-height: 25px
 					font-size: 14px
 					text-indent: 10px
+
 					div.regex
 						width: 150px
 					input.negate
@@ -147,6 +157,7 @@
 				position: relative
 				input.regex
 					width: 160px
+					height: 26px
 					&.valid
 						border-color: green
 					&.invalid
@@ -154,11 +165,24 @@
 				input.negate
 					position: absolute
 					top: 5px
-					left: 168px
+					left: 165px
 				input.button
 					position: absolute
 					right: 0
 					top: 0
+
+	.user
+		background-color: #333
+		color: white
+		position: absolute
+		top: 0
+		right: 0
+		border-bottom-left-radius: 5px
+		padding: 5px
+		a
+			color: white
+			display: inline-block
+			padding: 5px
 
 	div.admin
 		padding: 10px
@@ -171,7 +195,6 @@
 
 	div.options
 		padding: .5rem .5rem .5rem 1rem
-		float: left
 		ul
 			list-style: none
 			margin: 0

@@ -1,7 +1,38 @@
 import getClient from '../../lib/getClient'
 
+import {ManagementClient} from 'auth0'
+
+import {decrypt, encrypt} from '../../lib/encryption.js'
+
+async function getManagementClient() {
+	const options = {
+		method: 'POST',
+		headers: {
+			'content-type': 'application/json'
+		},
+		body: JSON.stringify({
+			client_id: process.env.AUTH0_SERVER_CLIENT_ID,
+			client_secret: process.env.AUTH0_SERVER_CLIENT_SECRET,
+			audience: "https://prettylogs.us.auth0.com/api/v2/",
+			grant_type: "client_credentials",
+		})
+	}
+
+	const credentialsResponse = await fetch('https://prettylogs.us.auth0.com/oauth/token', options)
+	const credentials = await credentialsResponse.json()
+
+	return new ManagementClient({
+		token: credentials.access_token,
+		domain: 'prettylogs.us.auth0.com'
+	})
+}
+
 export default async function handler(req, res) {
-	if (req.query.auth !== 'e1f4850aab649b48a66aed38074bbe4b84a85fd6') {
+	const managementClient = await getManagementClient()
+	const userId = decrypt(req.query.auth.trim())
+	try {
+		const user = await managementClient.getUser({id: userId})
+	} catch (e) {
 		return res.send('nope')
 	}
 
@@ -25,6 +56,7 @@ export default async function handler(req, res) {
 	logs.map(log => {
 		log.project = project._id
 		log.stack_trace = JSON.parse(log.stack_trace)
+		log.owner = userId
 		return log
 	})
 

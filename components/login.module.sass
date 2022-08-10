@@ -1,0 +1,37 @@
+@import "styles/config.sass"
+@import "styles/buttons.sass"
+
+.login
+	position: fixed
+	top: 50%
+	left: 50%
+	transform: translate(-50%, -50%)
+	a
+		color: white
+		display: inline-block
+		padding: 5px
+	.top
+		display: flex
+		div
+			height: 30px
+			display: block
+			width: 20%
+		div:nth-child(1)
+			background-color: $error
+			border-top: 6px solid darken($error, 20%)
+		div:nth-child(2)
+			background-color: $warning
+			border-top: 6px solid darken($warning, 20%)
+		div:nth-child(3)
+			background-color: $info
+			border-top: 6px solid darken($info, 20%)
+		div:nth-child(4)
+			background-color: $notice
+			border-top: 6px solid darken($notice, 20%)
+		div:nth-child(5)
+			background-color: $critical
+			border-top: 6px solid darken($critical, 20%)
+
+	.login_content
+		padding: 50px 100px
+		background-color: #333
