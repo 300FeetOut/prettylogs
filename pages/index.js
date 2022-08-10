@@ -11,17 +11,16 @@ import Login from '../components/login'
 
 import LogsWrapper from '../components/logsWrapper'
 
+import styles from './index.module.sass'
+
 export default function Index() {
 	const { user, error, isLoading } = useUser()
 	const [regex, setRegex] = useState(null)
 	const [negated, setNegated] = useState(null)
 	const [levels, setLevels] = useState(config.levels)
 
-	// const encrypted = encrypt('google-oauth2|111822682839916165003')
-	// console.log('decrypted', decrypt(encrypted))
-
-	if (isLoading) return <div>Loading...</div>
-	if (error) return <div>{error.message}</div>
+	if (isLoading) return <div className={styles.loading}>Loading...</div>
+	if (error) return <div className={styles.error}>{error.message}</div>
 
 	const queryClient = new QueryClient()
 
