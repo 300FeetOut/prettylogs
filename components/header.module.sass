@@ -68,108 +68,23 @@
 				&:hover
 					background-color: darken($critical, 10%)
 
-	div.regex_filters
-		width: 300px
+	div.search
+		width: 340px
+		height: 75px
+		padding: 24px 21px 21px 21px
 		margin: 0 0 0 10px
 		position: relative
-		div.drawer
-			padding: 0 10px 0 10px
-			z-index: 1
-			background-color: $regex_drawer_background_color
-			border-bottom-radius: 4px
-			background-color: #eee
-			position: relative
-			div.drawer_toggle
-				background: $regex_drawer_toggle_down no-repeat center center
-				height: 20px
-				width: 100%
-				position: absolute
-				bottom: -20px
-				left: 0
-				cursor: pointer
-				&.open
-					background-image: $regex_drawer_toggle_up
-			header
-				overflow: hidden
-				border-bottom: 1px solid #ccc
-				margin-bottom: 5px
-				padding: 5px 0 3px 0
-				height: 24px
-				color: #333
-				div.regex
-					float: left
-				div.negate
-					float: right
-					margin-right: 65px
-
-			ul.saved
-				overflow: hidden
-				margin: 0
-				padding: 0
-				&.collapsed
-					height: 0
-				li
-					position: relative
-					color: $filter_text
-					cursor: pointer
-					transition: height .35s
-					height: 25px
-					line-height: 25px
-					font-size: 14px
-					text-indent: 10px
-
-					div.regex
-						width: 150px
-					input.negate
-						position: absolute
-						top: 6px
-						right: 50px
-					div.delete 
-						background: $icon_delete no-repeat center center
-						width: 20px
-						height: 20px
-						position: absolute
-						top: 3px
-						right: 5px
-						display: none
-						cursor: pointer
-					div.edit
-						background: $icon_edit no-repeat center center
-						width: 20px
-						height: 20px
-						position: absolute
-						top: 3px
-						right: 25px
-						display: none
-						cursor: pointer
-					&:hover
-						div.delete, div.edit
-							display: block
-					&.active
-						background-color: $applied
-					&.editing
-						background: $editing
-
-			form.realtime
-				height: 36px
-				overflow: hidden
-				margin-top: 10px
-				position: relative
-				input.regex
-					width: 160px
-					height: 26px
-					&.valid
-						border-color: green
-					&.invalid
-						border-color: red
-				input.negate
-					position: absolute
-					top: 5px
-					left: 165px
-				input.button
-					position: absolute
-					right: 0
-					top: 0
+		background-color: #333
+		border-bottom-left-radius: 5px
+		border-bottom-right-radius: 5px
+		input.negate
+			position: absolute
+			top: 29px
+			right: 20px
+		input.regex
+			height: 30px
+			margin-right: 20px
+			width: 210px
 
 	.user
 		background-color: #333

@@ -18,6 +18,7 @@
 	function cFunction() {
 		plog('Lorem ipsum');
 		plog('Elementum ex hendrerit', array('Lorem' => 'Ipsum', 'Dolar' => 'Sit'));
+		asdf('An error occurred', 1);
 	}
 
 	aFunction();

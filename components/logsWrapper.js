@@ -1,0 +1,40 @@
+import {
+	useQuery,
+} from "@tanstack/react-query"
+import _ from 'lodash'
+import styles from './logsWrapper.module.sass'
+
+import Logs from '../components/logs'
+
+function LogsWrapper({project, regex, negateRegex, levels}) {
+	async function fetchLogs() {
+		const response = await fetch(`/api/logs?project=${project}&pinned=0`)
+		return await response.json()
+	}
+
+	async function fetchPinnedLogs() {
+		const response = await fetch(`/api/logs?project=${project}&pinned=1`)
+		return await response.json()
+	}
+
+	const logsQuery = useQuery(['logs'], fetchLogs, {
+		refetchInterval: 500,
+	})
+	const pinnedLogsQuery = useQuery(['pinnedLogs'], fetchPinnedLogs)
+
+	function refetch() {
+		logsQuery.refetch()
+		pinnedLogsQuery.refetch()
+	}	
+
+	return <div className={styles.logs_wrapper}>
+		<div className={styles.logs}>
+			<Logs logs={logsQuery.data} refetch={refetch} regex={regex} negateRegex={negateRegex} levels={levels} />
+		</div>
+		<div className={styles.pinned_logs}>
+			<Logs logs={pinnedLogsQuery.data} refetch={refetch} regex={regex} negateRegex={negateRegex} levels={levels} />
+		</div>
+	</div>
+}
+
+export default LogsWrapper

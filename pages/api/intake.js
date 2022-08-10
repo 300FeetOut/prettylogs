@@ -57,6 +57,7 @@ export default async function handler(req, res) {
 		log.project = project._id
 		log.stack_trace = JSON.parse(log.stack_trace)
 		log.owner = userId
+		log.pinned = 0
 		return log
 	})
 

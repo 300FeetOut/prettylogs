@@ -7,6 +7,6 @@ export default {
 	truncate_text: 500, // false doesn't collapse it at all. # of characters before it collapses the text.
 	date_format: 'MMMM Do YYYY ', // http://momentjs.com/docs/#/displaying/format/
 	time_format: 'h:mm:ssa',
-	levels: ['info', 'notice', 'warning', 'error', 'critical'],
+	levels: {info: 1, notice: 1, warning: 1, error: 1, critical: 1},
 	default_filters: {levels: {'info':1, 'error':1}, saved_filters: [], active_filter: {}}
 }

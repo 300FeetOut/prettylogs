@@ -1,67 +1,31 @@
 import { useState } from 'react'
 import classNames from 'classnames'
+import _ from 'lodash'
 
 import styles from './header.module.sass'
 
-export default function Header({level, user}) {
-	const [formFilter, setFormFilter] = useState({})
-	const [collapseFilters, setCollapseFilters] = useState(true)
+import config from '../config'
 
-	const levels = ['info', 'notice', 'warning', 'error', 'critical']
+export default function Header({level, user, updateRegex, negateRegex, updateLevels}) {
+	const [levels, setLevels] = useState(config.levels)
 
-	const savedFilters = []
-
-	function applyFilter() {
-
-	}
-
-	function editFilter() {
-
-	}
-
-	function deleteFilter() {
-
-	}
-
-	function saveFilter() {
-		console.log('save')
+	function changeLevels(level) {
+		levels[level] = !levels[level]
+		setLevels({...levels})
+		updateLevels(levels)
 	}
 
 	return (
 		<div className={styles.header}>
 			<ul className={styles.levels}>
-				{levels.map((level) => {
-					return <li key={level} className={classNames(styles[`${level}_level`], levels.indexOf(level) > -1 ? styles.active : '')}><span>{level}</span></li>
+				{Object.keys(levels).map((level) => {
+					return <li onClick={changeLevels.bind(null, level)} key={level} className={classNames(styles[`${level}_level`], levels[level] ? styles.active : '')}><span>{level}</span></li>
 				})}
 			</ul>
 
-			<div className={styles.regex_filters}>
-				<div className={styles.drawer}>
-					<header>
-						<div className={styles.regex}>Regex</div>
-						<div className={styles.negate}>Negate</div>
-					</header>
-					<ul className={classNames(collapseFilters ? styles.collapsed : '', styles.saved)}>
-						{savedFilters && savedFilters.map((filter) => {
-							return <li key={filter.regex}>
-								<div className={styles.regex} onClick={applyFilter.bind(null, filter)}>
-									{filter.regex}
-								</div>
-								<input type="checkbox" onClick={toggleNegate.bind(null, filter)} />
-								<div className={styles.edit} onClick={editFilter.bind(null, filter)}></div>
-								<div className={styles.delete} onClick={deleteFilter.bind(null, filter)}></div>
-							</li>
-						})}
-					</ul>
-
-					<form className={styles.realtime} onSubmit={saveFilter}>
-						<input className={styles.regex} type="text" />
-						<input className={styles.negate} type="checkbox" />
-						<input className={classNames(styles.button)} type="button" value="save" />
-					</form>
-
-					<div className={classNames(!collapseFilters ? styles.open : '', styles.drawer_toggle)} onClick={setCollapseFilters.bind(null, !collapseFilters)}></div>
-				</div>
+			<div className={styles.search}>
+				<input placeholder="Search" onChange={updateRegex} className={styles.regex} type="text" />
+				<label>Negate <input onChange={negateRegex} className={styles.negate} type="checkbox" /></label>
 			</div>
 
 			{user && <div className={styles.user}>

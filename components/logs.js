@@ -1,160 +1,87 @@
 import classNames from "classnames"
-
 import {useEffect, useRef} from "react"
-
-import {
-	useQuery,
-} from "@tanstack/react-query"
-
 import {filePath} from '/lib/filters'
-
+import _ from 'lodash'
+import moment from "moment"
 import styles from './logs.module.sass'
-
-import {useUser} from '@auth0/nextjs-auth0'
-
 import config from '/config.js'
 
-import moment from "moment"
+import prettyPrint from "../lib/prettyPrint"
 
-function prettyPrint(thing, wrap_quotes, depth) {
-	function render(thing, wrap_quotes = false, depth = 0) {
-		if (thing === null) {
-			return 'null'
-		}
-
-		const type = getType(thing)
-
-		if (type == 'array' || type == 'object') {
-			return renderObject(thing, depth, 0)
-		}
-
-		thing = new String(thing)
-		const encoded_thing = encodeHtmlEntity(thing)
-
-		if (depth == 0) {
-			return '<div class="text">' + encoded_thing + '</div>'
-		} else {
-			if (wrap_quotes) {
-				return '"' + encoded_thing + '"'
-			} else {
-				return encoded_thing + ''
-			}
-		}
-	}
-
-	function encodeHtmlEntity(str) {
-		const buf = []
-		for (var i = 0; i < str.length; i++) {
-			buf.push(['&#', str.charCodeAt(i), ';'].join(''))
-		}
-		
-		return buf.join('')
-	}
-
-	function truncate(thing, length) {
-		return thing.substring(0, length)
-	}
-
-	function getType(thing) {
-		if (thing === null) {
-			return 'null'
-		}
-
-		if (thing instanceof Array) {
-			return 'array'
-		}
-
-		if (thing instanceof Object) {
-			return 'object'
-		}
-
-		return 'string'
-	}
-
-	function renderObject(object, depth, length) {
-		let rendered_object = []
-		const type = getType(object)
-
-		for (let [key, value] of Object.entries(object)) {
-			const child_type = getType(value)
-			let empty = ''
-
-			if ((child_type == 'object' && !Object.keys(value).length) || (child_type == 'array' && !value.length)) {
-				empty = 'empty'
-			}
-
-			const label = `<div class="${styles.key} ${styles.collapsed} ${styles[child_type] || ''} ${styles[empty] || ''}">` + key + `:<div class="${styles.icon}"></div></div>`
-			if (child_type == 'string' || child_type == 'null') {
-				value = `<div class="${styles.value}">` + render(value, true, depth+1) + `<span class="${styles.comma}">,</span></div>`
-			} else { // Render objects/arrays without a value wrapper
-				value = render(value, true, depth+1)
-			}
-			rendered_object.push('<li>' + label + value + '</li>')
-		}
-
-		rendered_object = `<ul ng-click="test()" class="${styles.rendered} ${styles.collapsed} ${styles[type]}">` + rendered_object.join('') + '</ul>'
-
-		let toggle_button = ''
-		if (depth == 0 && Object.keys(object).length > 3) {
-			toggle_button = `<div class="${styles.toggle}"></div>`
-		}
-
-		return rendered_object + toggle_button
-	}
-
-	return render(thing, wrap_quotes, depth)
-}
-
-function Logs({project}) {
-	const {user, error, isLoading} = useUser()
+function Logs({logs, refetch, regex, negateRegex, levels}) {
 	const logsRef = useRef(null)
 
-	async function fetchLogs() {
-		const response = await fetch(`/api/logs?project=${project}`)
-		return await response.json()
-	}
-
-	const {data, status} = useQuery(['logs'], fetchLogs)
-
 	useEffect(() => {
-		console.log(logsRef)
-
 		function onClick(e) {
 			const target = e.target
-			const nextSibling = target.parentNode.nextSibling
 
-			if ([...target.parentNode.classList].indexOf(styles.collapsed) > -1) {
-				target.parentNode.classList.remove(styles.collapsed)
-				target.parentNode.classList.add(styles.expanded)
+			if (target.classList.contains(styles.icon)) {
+				const nextSibling = target.parentNode.nextSibling
 
-				if (nextSibling) {
-					nextSibling.classList.remove(styles.collapsed)
-					nextSibling.classList.add(styles.expanded)
-				}
-
-			} else {
-				target.parentNode.classList.add(styles.collapsed)
-				target.parentNode.classList.remove(styles.expanded)
-
-				if (nextSibling) {
-					nextSibling.classList.add(styles.collapsed)
-					nextSibling.classList.remove(styles.expanded)
+				if ([...target.parentNode.classList].indexOf(styles.collapsed) > -1) {
+					target.parentNode.classList.remove(styles.collapsed)
+					target.parentNode.classList.add(styles.expanded)
+	
+					if (nextSibling) {
+						nextSibling.classList.remove(styles.collapsed)
+						nextSibling.classList.add(styles.expanded)
+					}
+	
+				} else {
+					target.parentNode.classList.add(styles.collapsed)
+					target.parentNode.classList.remove(styles.expanded)
+	
+					if (nextSibling) {
+						nextSibling.classList.add(styles.collapsed)
+						nextSibling.classList.remove(styles.expanded)
+					}
 				}
 			}
 		}
 
 		logsRef.current.addEventListener('click', onClick)
 
+		const interval = setInterval(() => {
+			if (!logsRef || !logsRef.current) {
+				return
+			}
+	
+			const logs = [...logsRef.current.querySelectorAll(`.${styles.log}`)]
+			const now = Date.now()
+	
+			logs.length && logs.map((log) => {
+				const percent = (now - log.dataset.created) / (1000 * 60 * 5 /*5 minutes*/)
+				log.style.opacity = 1 - percent
+			})
+		}, 1000)
+
 		return () => {
 			logsRef.current.removeEventListener('click', onClick)
+			clearInterval(interval)
 		}
 	},[])
 
 
-	function pin(log) {
-		console.log('pin', log)
+	async function pin(log) {
+		const response = await fetch(`/api/pin?_id=${log._id}&pin=${log.pinned ? 0 : 1}`)
+		const responseJson = await response.json()
+		refetch()
 	}
 
+
+	function toggleStackTrace(e) {
+		const element = _.find(e.nativeEvent.path, (elem) => {
+			return elem.classList.contains(styles.stack_trace)
+		})
+
+		if (element) {
+			if (element.classList.contains(styles.expand)) {
+				element.classList.remove(styles.expand)
+			} else {
+				element.classList.add(styles.expand)
+			}
+		}
+	}
 
 	function prepareLog(log) {
 		const created = moment.unix(log.created/1000 - 60)
@@ -166,7 +93,6 @@ function Logs({project}) {
 		}
 
 		try {
-			console.log(log.stack_trace)
 			log.stack_trace = log.stack_trace.reverse()
 		} catch (e) {
 			log.stack_trace = null
@@ -178,12 +104,44 @@ function Logs({project}) {
 		}
 	}
 
-	return <div ref={logsRef}>
-		<h1>The logs</h1>
+	function matchesRegex(log) {
+		if (!regex) {
+			return true
+		}
+		
+		const activeRegex = new RegExp(regex, 'gim')
 
-		{data && data.map((log) => {
+		let message = ''
+		if (typeof log.message == 'object') {
+			message = JSON.stringify(log.message)
+		} else {
+			message = new String(log.message)
+		}
+
+		let matches = false
+		matches = message.match(activeRegex)
+		if (matches) {
+			if (negateRegex) {
+				return false
+			}
+			return true
+		} else {
+			if (negateRegex) {
+				return true
+			}			
+			return false
+		}
+	}
+
+	return <div ref={logsRef}>
+		{logs && logs.map((log) => {
 			prepareLog(log)
-			return <div key={log._id} className={styles.log}>
+
+			if (!matchesRegex(log) || !levels[log.level]) {
+				return ''
+			}
+
+			return <div data-created={log.created} key={log._id} className={classNames(styles.log, styles[log.level])}>
 				<a className={styles.pin} title="Pin this log message" onClick={pin.bind(null, log)}>Pin</a>
 
 				<div className={styles.timestamp}>
@@ -196,7 +154,7 @@ function Logs({project}) {
 					{log.referrer}
 				</div>
 
-				{log.stack_trace && log.stack_trace.length && <div className={classNames(styles.stack_trace, styles.collapsed)}>
+				{log.stack_trace && !!log.stack_trace.length && <div onClick={toggleStackTrace} title="Expand stack" className={classNames(styles.stack_trace)}>
 					{log.stack_trace.map((trace, i) => {
 						return <div key={i} className={styles.line}>
 							<div className={styles.identifying_info}>
@@ -210,9 +168,10 @@ function Logs({project}) {
 							</div>}
 						</div>
 					})}
+					<div className={styles.expand_stack}>expand</div>
 				</div>}
 
-				<div className={styles.message} dangerouslySetInnerHTML={{__html: prettyPrint(log.message)}}></div>
+				<div className={styles.message} dangerouslySetInnerHTML={{__html: prettyPrint(log.message, styles)}}></div>
 			</div>
 		})}
 	</div>
