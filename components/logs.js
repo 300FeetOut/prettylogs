@@ -38,6 +38,16 @@ function Logs({logs, refetch, regex, negateRegex, levels, pinned}) {
 						nextSibling.classList.remove(styles.expanded)
 					}
 				}
+			} else if (target.classList.contains(styles.toggle)) {
+				if (target.classList.contains(styles.expanded)) {
+					target.previousSibling.classList.add(styles.collapsed)
+					target.previousSibling.classList.remove(styles.expanded)
+					target.classList.remove(styles.expanded)
+				} else {
+					target.previousSibling.classList.remove(styles.collapsed)
+					target.previousSibling.classList.add(styles.expanded)
+					target.classList.add(styles.expanded)
+				}
 			}
 		}
 
