@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 
 import {
 	useQuery,
@@ -13,27 +13,33 @@ function LogsWrapper({regex, negateRegex, levels}) {
 	const [project, setProject] = useState(null)
 
 	async function fetchLogs() {
+		if (!project) {
+			return []
+		}
 		const response = await fetch(`/api/logs?project=${project}&pinned=0`)
 		return await response.json()
 	}
 
 	async function fetchPinnedLogs() {
+		if (!project) {
+			return []
+		}
 		const response = await fetch(`/api/logs?project=${project}&pinned=1`)
 		return await response.json()
 	}
 
-	const logsQuery = useQuery(['logs'], fetchLogs, {
+	const logsQuery = useQuery(['logs', project], fetchLogs, {
 		refetchInterval: 500,
-		enabled: !!project
+		refetchIntervalInBackground: false,
 	})
-	const pinnedLogsQuery = useQuery(['pinnedLogs'], fetchPinnedLogs, {
-		enabled: !!project
-	})
+	const pinnedLogsQuery = useQuery(['pinnedLogs', project], fetchPinnedLogs, {})
 
 	function refetch() {
 		logsQuery.refetch()
 		pinnedLogsQuery.refetch()
-	}	
+	}
+
+	useEffect(refetch, [project])
 
 	return <div className={styles.logs_wrapper}>
 		<Projects projectSelected={(project) => {setProject(project)}}></Projects>
