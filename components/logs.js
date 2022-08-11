@@ -143,7 +143,7 @@ function Logs({logs, refetch, regex, negateRegex, levels, pinned}) {
 			prepareLog(log)
 
 			if (!matchesRegex(log) || (pinned && !levels[log.level])) {
-				return ''
+				return '&nbsp;'
 			}
 
 			return <div data-created={log.created} key={log._id} className={classNames(styles.log, styles[log.level], styles.pinned)}>

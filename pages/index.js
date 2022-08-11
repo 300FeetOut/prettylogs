@@ -42,7 +42,7 @@ export default function Index() {
 		return (
 			<QueryClientProvider client={queryClient}>
 				<Header user={user} updateRegex={updateRegex} negateRegex={negateRegex} updateLevels={updateLevels}></Header>
-				<LogsWrapper project="62ed7a325c3793613596ffe7" regex={regex} negateRegex={negated} levels={levels}></LogsWrapper>
+				<LogsWrapper regex={regex} negateRegex={negated} levels={levels}></LogsWrapper>
 			</QueryClientProvider>
 		)
 	}

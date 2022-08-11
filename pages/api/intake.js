@@ -31,7 +31,8 @@ export default async function handler(req, res) {
 	const managementClient = await getManagementClient()
 	const userId = decrypt(req.query.auth.trim())
 	try {
-		const user = await managementClient.getUser({id: userId})
+		// Make sure user exists, else fail
+		await managementClient.getUser({id: userId})
 	} catch (e) {
 		return res.send('nope')
 	}
@@ -41,11 +42,12 @@ export default async function handler(req, res) {
 	const client = await getClient()
 	const db = client.db('Prettylogs')
 
-	let project = await db.collection('projects').findOne({name: projectName})
+	let project = await db.collection('projects').findOne({name: projectName, owner: userId})
 
 	if (!project) {
 		const insertedResponse = await db.collection('projects').insertOne({
 			name: projectName,
+			owner: userId,
 			created: Date.now()
 		})
 
