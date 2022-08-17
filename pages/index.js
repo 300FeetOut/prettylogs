@@ -14,7 +14,7 @@ import LogsWrapper from '../components/logsWrapper'
 import styles from './index.module.sass'
 
 export default function Index() {
-	const { user, error, isLoading } = useUser()
+	const {user, error, isLoading} = useUser()
 	const [regex, setRegex] = useState(null)
 	const [negated, setNegated] = useState(null)
 	const [levels, setLevels] = useState(config.levels)

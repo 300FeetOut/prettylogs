@@ -11,12 +11,15 @@ import Projects from "./projects"
 
 function LogsWrapper({regex, negateRegex, levels}) {
 	const [project, setProject] = useState(null)
+	const [lastRefresh, setLastRefresh] = useState(Date.now())
+	const [clearing, setClearing] = useState(false)
+
 
 	async function fetchLogs() {
 		if (!project) {
 			return []
 		}
-		const response = await fetch(`/api/logs?project=${project}&pinned=0`)
+		const response = await fetch(`/api/logs?project=${project}&pinned=0&lastRefresh=${lastRefresh}`)
 		return await response.json()
 	}
 
@@ -31,6 +34,9 @@ function LogsWrapper({regex, negateRegex, levels}) {
 	const logsQuery = useQuery(['logs', project], fetchLogs, {
 		refetchInterval: 500,
 		refetchIntervalInBackground: false,
+		onSuccess: () => {
+			setClearing(false)
+		}
 	})
 	const pinnedLogsQuery = useQuery(['pinnedLogs', project], fetchPinnedLogs, {})
 
@@ -42,12 +48,22 @@ function LogsWrapper({regex, negateRegex, levels}) {
 	useEffect(refetch, [project])
 
 	return <div className={styles.logs_wrapper}>
-		<Projects projectSelected={(project) => {setProject(project)}}></Projects>
-		<div className={styles.logs}>
-			<Logs logs={logsQuery.data} pinned={false} refetch={refetch} regex={regex} negateRegex={negateRegex} levels={levels} />
+		<div className={styles.logs_header}>
+			<Projects projectSelected={(project) => {
+				setProject(project)
+			}}></Projects>
+			<button title="Clear" className={styles.refresh} onClick={() => {
+				setLastRefresh(Date.now())
+				setClearing(true)
+			}}>Refresh</button>
 		</div>
-		<div className={styles.pinned_logs}>
-			<Logs logs={pinnedLogsQuery.data} pinned={true} refetch={refetch} regex={regex} negateRegex={negateRegex} levels={levels} />
+		<div className={styles.columns}>
+			<div className={styles.logs}>
+				{!clearing && <Logs lastRefresh={lastRefresh} logs={logsQuery.data} pinned={false} refetch={refetch} regex={regex} negateRegex={negateRegex} levels={levels} />}
+			</div>
+			<div className={styles.pinned_logs}>
+				<Logs logs={pinnedLogsQuery.data} pinned={true} refetch={refetch} regex={regex} negateRegex={negateRegex} levels={levels} />
+			</div>
 		</div>
 	</div>
 }

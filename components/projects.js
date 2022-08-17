@@ -1,11 +1,12 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 
 import {
 	useQuery,
 } from "@tanstack/react-query"
-import _ from 'lodash'
+import _, { initial } from 'lodash'
 import styles from './projects.module.sass'
 
+import { setCookie, getCookie } from "../lib/utility"
 
 function Projects({projectSelected}) {
 	const [currentProject, setCurrentProject] = useState(null)
@@ -21,7 +22,14 @@ function Projects({projectSelected}) {
 		const clickedProject = e.target.value
 		setCurrentProject(clickedProject)
 		projectSelected(clickedProject)
+		setCookie('plog_project', clickedProject, 365)
 	}
+
+	useEffect(() => {
+		const cookieProject = getCookie('plog_project')
+		setCurrentProject(cookieProject)
+		projectSelected(cookieProject)
+	}, [])	
 
 	return <select className={styles.projects_wrapper} value={currentProject || ''} onChange={selectProject}>
 		<option value={''}>Select project</option>

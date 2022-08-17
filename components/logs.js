@@ -65,7 +65,7 @@ function Logs({logs, refetch, regex, negateRegex, levels, pinned}) {
 		
 				logs.length && logs.map((log) => {
 					const percent = (now - log.dataset.created) / (1000 * 60 * 5 /*5 minutes*/)
-					log.style.opacity = 1 - percent
+					log.style.opacity = Math.max(.3, 1 - percent)
 				})
 			}, 1000)
 		}
@@ -153,7 +153,7 @@ function Logs({logs, refetch, regex, negateRegex, levels, pinned}) {
 			prepareLog(log)
 
 			if (!matchesRegex(log) || (pinned && !levels[log.level])) {
-				return '&nbsp;'
+				return ''
 			}
 
 			return <div data-created={log.created} key={log._id} className={classNames(styles.log, styles[log.level], styles.pinned)}>

@@ -104,21 +104,22 @@
 		ul
 			margin: 0 0 0 22px
 			padding: 0
-		.rendered
+		> .rendered
 			position: relative
 			li
 				overflow: hidden
 				line-height: 20px
 				display: none
 				clear: left
+				display: flex
 				&:nth-child(-n+3)
-					display: block
+					display: flex
 				&:last-child span.comma
 					display: none
 			span.comma
 				color: $rendered_object_comma_color
 			div.key, div.value
-				float: left
+				display: block
 				margin: 0
 				padding: 0
 				vertical-align: middle   
@@ -157,6 +158,7 @@
 			div.value
 				color: $rendered_object_value_color
 				margin-right: 10px
+				overflow-x: auto
 
 			.rendered.collapsed
 				display: none
@@ -164,7 +166,11 @@
 			&.expanded
 				clear: left
 				li
-					display: block
+					display: flex
+
+			&.collapsed
+				> li:nth-child(n+5)
+					display: none
 
 		div.toggle
 			cursor: pointer

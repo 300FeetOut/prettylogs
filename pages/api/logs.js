@@ -8,7 +8,6 @@ export default withApiAuthRequired(async function handler(req, res) {
 	const session = getSession(req, res)
 	const user = session.user
 
-
 	const projectId = req.query.project
 
 	try {
@@ -17,7 +16,7 @@ export default withApiAuthRequired(async function handler(req, res) {
 
 		const query = {project: ObjectId(projectId), owner: user.sub}
 
-		const cutoff = Date.now() - (1000*60*5)
+		const cutoff = req.query.lastRefresh ? req.query.lastRefresh - 5000 : (Date.now() - (1000*60*5))
 
 		query.pinned = parseInt(req.query.pinned)
 		if (query.pinned == 0) {

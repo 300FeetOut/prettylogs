@@ -25,7 +25,11 @@
 			'laoreet' => 'sem',
 			'sed' => 'tincidunt',
 			'Donec' => 'semper',
-			'orci' => 'eu'
+			'orci' => 'eu',
+			'a' => 'b',
+			'c' => 'd',
+			'e' => 'f',
+			'g' => 'h',
 		));
 		plog('Elementum ex hendrerit', array(
 			'Lorem' => 'Ipsum',
@@ -34,9 +38,20 @@
 			'laoreet' => 'sem',
 			'sed' => 'tincidunt',
 			'Donec' => 'semper',
+			'orci' => 'eu',
+			'sed' => 'tincidunt',
+			'Donec' => 'semper',
 			'orci' => 'eu'
 		));
+		dFunction();
 		asdf('An error occurred', 1);
+	}
+
+	function dFunction() {
+		plog(array(
+			'key' => 'value',
+			'longkey' => 'Curabiturpharetraligulaegetvariussodales.Praesentetcursusaugue.Etiamidultricieslibero.Morbiatdiamnonarcueleifendfermentumvitaeutlibero.Morbiultricesvelitefficiturleofeugiattincidunt.'
+		));
 	}
 
 	aFunction();
