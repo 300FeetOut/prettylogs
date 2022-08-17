@@ -1,11 +1,11 @@
 <?php
-	require('./pretty_logs.php');
+	require('./pretty_logs.php'); // The prettylogs lib.
 	PrettyLogs::init(
-		'b3421560b911bae084e636192ad387ef246129173d559f1c6505d99bd1ab264d175790cbbe7a93070674c84533cc7c11',
-		'Dev',
+		'b3421560b911bae084e636192ad387ef246129173d559f1c6505d99bd1ab264d175790cbbe7a93070674c84533cc7c11', // Your api key. You'll find it in the top right corner of prettylogs.vercel.app when logged in.
+		'Dev', // Project name. If it doesn't exist, it will be created the first time a log is sent to it.
 		true, // (true ignores https errors)
-		// 'https://prettylogs.vercel.app',
-		'http://localhost:3000'
+		// 'https://prettylogs.vercel.app', // Live prettylogs domain
+		'http://localhost:3000' // For developing prettylogs
 	);
 
 	function aFunction() {
