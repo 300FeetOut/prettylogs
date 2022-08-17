@@ -23,6 +23,10 @@ export default withApiAuthRequired(async function handler(req, res) {
 			query.created = {$gt: cutoff}
 		}
 
+		if (query.pinned) {
+			console.log(query)
+		}
+
 		const logsCursor = await db.collection('logs').find(query)
 		const logs = await logsCursor.toArray()
 

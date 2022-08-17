@@ -14,7 +14,6 @@ function LogsWrapper({regex, negateRegex, levels}) {
 	const [lastRefresh, setLastRefresh] = useState(Date.now())
 	const [clearing, setClearing] = useState(false)
 
-
 	async function fetchLogs() {
 		if (!project) {
 			return []
@@ -31,14 +30,13 @@ function LogsWrapper({regex, negateRegex, levels}) {
 		return await response.json()
 	}
 
-	const logsQuery = useQuery(['logs', project], fetchLogs, {
-		refetchInterval: 500,
-		refetchIntervalInBackground: false,
-		onSuccess: () => {
-			setClearing(false)
-		}
+	const pinnedLogsQuery = useQuery(['pinnedLogs', project], fetchPinnedLogs, {
+		refetchInterval: false,
 	})
-	const pinnedLogsQuery = useQuery(['pinnedLogs', project], fetchPinnedLogs, {})
+
+	const logsQuery = useQuery(['logs', project], fetchLogs, {
+		refetchInterval: 500
+	})
 
 	function refetch() {
 		logsQuery.refetch()
@@ -59,7 +57,7 @@ function LogsWrapper({regex, negateRegex, levels}) {
 		</div>
 		<div className={styles.columns}>
 			<div className={styles.logs}>
-				{!clearing && <Logs lastRefresh={lastRefresh} logs={logsQuery.data} pinned={false} refetch={refetch} regex={regex} negateRegex={negateRegex} levels={levels} />}
+				{!clearing && <Logs logs={logsQuery.data} pinned={false} refetch={refetch} regex={regex} negateRegex={negateRegex} levels={levels} />}
 			</div>
 			<div className={styles.pinned_logs}>
 				<Logs logs={pinnedLogsQuery.data} pinned={true} refetch={refetch} regex={regex} negateRegex={negateRegex} levels={levels} />

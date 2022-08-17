@@ -6,9 +6,13 @@ import moment from "moment"
 import styles from './logs.module.sass'
 import config from '/config.js'
 
+import {
+	useQuery,
+} from "@tanstack/react-query"
+
 import prettyPrint from "../lib/prettyPrint"
 
-function Logs({logs, refetch, regex, negateRegex, levels, pinned}) {
+function Logs({refetch, regex, negateRegex, levels, pinned, logs}) {
 	const logsRef = useRef(null)
 
 	useEffect(() => {
@@ -74,8 +78,7 @@ function Logs({logs, refetch, regex, negateRegex, levels, pinned}) {
 			logWrapper.removeEventListener('click', onClick)
 			clearInterval(interval)
 		}
-	},[])
-
+	}, [])
 
 	async function pin(log) {
 		const response = await fetch(`/api/pin?_id=${log._id}&pin=${log.pinned ? 0 : 1}`)
@@ -99,24 +102,28 @@ function Logs({logs, refetch, regex, negateRegex, levels, pinned}) {
 	}
 
 	function prepareLog(log) {
-		const created = moment.unix(log.created/1000 - 60)
+		const preparedLog = {...log}
+		const created = moment.unix(preparedLog.created/1000 - 60)
 
-		log.prepared = {
+		preparedLog.prepared = {
 			date: moment().isSame(created, 'day') ? 'Today at ' : created.format(config.date_format),
 			time: created.format(config.time_format),
 			from_now: created.fromNow()
 		}
 
-		try {
-			log.stack_trace = log.stack_trace.reverse()
-		} catch (e) {
-			log.stack_trace = null
-		}
+		// preparedLog.stack_trace = [...preparedLog.stack_trace]
+		// try {
+		// 	preparedLog.stack_trace = preparedLog.stack_trace.reverse()
+		// } catch (e) {
+		// 	preparedLog.stack_trace = null
+		// }
 
 		try {
-			log.message = JSON.parse(log.message)
+			preparedLog.message = JSON.parse(log.message)
 		} catch (e) {
 		}
+
+		return preparedLog
 	}
 
 	function matchesRegex(log) {
@@ -147,30 +154,30 @@ function Logs({logs, refetch, regex, negateRegex, levels, pinned}) {
 			return false
 		}
 	}
-
+	
 	return <div ref={logsRef}>
 		{logs && logs.map((log) => {
-			prepareLog(log)
+			const preparedLog = prepareLog(log)
 
-			if (!matchesRegex(log) || (pinned && !levels[log.level])) {
+			if (!matchesRegex(preparedLog) || (pinned && !levels[preparedLog.level])) {
 				return ''
 			}
 
-			return <div data-created={log.created} key={log._id} className={classNames(styles.log, styles[log.level], styles.pinned)}>
-				<div className={styles.pin} title="Pin this log message" onClick={pin.bind(null, log)}>Pin</div>
+			return <div data-created={preparedLog.created} key={preparedLog._id} className={classNames(styles.log, styles[preparedLog.level], styles.pinned)}>
+				<div className={styles.pin} title={pinned ? "Unpin" : "Pin this log message"} onClick={pin.bind(null, preparedLog)}>Pin</div>
 
 				<div className={styles.timestamp}>
-					<span className={styles.date}>{log.prepared.date}</span>
-					<span className={styles.time}>{log.prepared.time}</span>
-					<span className={styles.from_now}>{log.prepared.from_now}</span>
+					<span className={styles.date}>{preparedLog.prepared.date}</span>
+					<span className={styles.time}>{preparedLog.prepared.time}</span>
+					<span className={styles.from_now}>{preparedLog.prepared.from_now}</span>
 				</div>
 
 				<div className={styles.referrer}>
-					{log.referrer}
+					{preparedLog.referrer}
 				</div>
 
-				{log.stack_trace && !!log.stack_trace.length && <div onClick={toggleStackTrace} title="Expand stack" className={classNames(styles.stack_trace)}>
-					{log.stack_trace.map((trace, i) => {
+				{preparedLog.stack_trace && !!preparedLog.stack_trace.length && <div onClick={toggleStackTrace} title="Expand stack" className={classNames(styles.stack_trace)}>
+					{preparedLog.stack_trace.map((trace, i) => {
 						return <div key={i} className={styles.line}>
 							<div className={styles.identifying_info}>
 								<div className={styles.line_number}>{trace.line || '&nbsp;'}</div>
@@ -186,7 +193,7 @@ function Logs({logs, refetch, regex, negateRegex, levels, pinned}) {
 					<div className={styles.expand_stack}>expand</div>
 				</div>}
 
-				<div className={styles.message} dangerouslySetInnerHTML={{__html: prettyPrint(log.message, styles)}}></div>
+				<div className={styles.message} dangerouslySetInnerHTML={{__html: prettyPrint(preparedLog.message, styles)}}></div>
 			</div>
 		})}
 	</div>
