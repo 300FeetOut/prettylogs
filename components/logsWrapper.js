@@ -19,7 +19,9 @@ function LogsWrapper({regex, negateRegex, levels}) {
 			return []
 		}
 		const response = await fetch(`/api/logs?project=${project}&pinned=0&lastRefresh=${lastRefresh}`)
-		return await response.json()
+		const responseJson = await response.json()
+		setClearing(false)
+		return responseJson
 	}
 
 	async function fetchPinnedLogs() {
