@@ -3,7 +3,7 @@ import { useState, useEffect } from "react"
 import {
 	useQuery,
 } from "@tanstack/react-query"
-import _ from 'lodash'
+import _, { last } from 'lodash'
 import styles from './logsWrapper.module.sass'
 
 import Logs from '../components/logs'
@@ -37,13 +37,18 @@ function LogsWrapper({regex, negateRegex, levels}) {
 	})
 
 	const logsQuery = useQuery(['logs', project], fetchLogs, {
-		refetchInterval: 500
+		refetchInterval: () => {return clearing ? false : 500}
 	})
 
 	function refetch() {
 		logsQuery.refetch()
 		pinnedLogsQuery.refetch()
 	}
+
+	useEffect(() => {
+		setClearing(true)
+		logsQuery.refetch()
+	}, [lastRefresh])
 
 	useEffect(refetch, [project])
 
@@ -54,7 +59,6 @@ function LogsWrapper({regex, negateRegex, levels}) {
 			}}></Projects>
 			<button title="Clear" className={styles.refresh} onClick={() => {
 				setLastRefresh(Date.now())
-				setClearing(true)
 			}}>Refresh</button>
 		</div>
 		<div className={styles.columns}>

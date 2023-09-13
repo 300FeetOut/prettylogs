@@ -16,15 +16,12 @@ export default withApiAuthRequired(async function handler(req, res) {
 
 		const query = {project: ObjectId(projectId), owner: user.sub}
 
-		const cutoff = req.query.lastRefresh ? req.query.lastRefresh - 5000 : (Date.now() - (1000*60*5))
+		const cutoffSeconds = 1
+		const cutoff = req.query.lastRefresh ? req.query.lastRefresh - (cutoffSeconds * 1000) : (Date.now() - (1000*60*cutoffSeconds))
 
 		query.pinned = parseInt(req.query.pinned)
 		if (query.pinned == 0) {
 			query.created = {$gt: cutoff}
-		}
-
-		if (query.pinned) {
-			console.log(query)
 		}
 
 		const logsCursor = await db.collection('logs').find(query)

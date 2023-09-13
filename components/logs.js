@@ -159,7 +159,7 @@ function Logs({refetch, regex, negateRegex, levels, pinned, logs}) {
 		{logs && logs.map((log) => {
 			const preparedLog = prepareLog(log)
 
-			if (!matchesRegex(preparedLog) || (pinned && !levels[preparedLog.level])) {
+			if (!matchesRegex(preparedLog) || (!pinned && !levels[preparedLog.level])) {
 				return ''
 			}
 
