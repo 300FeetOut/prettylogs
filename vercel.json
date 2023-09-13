@@ -1,1 +1,6 @@
-{}
+{
+	"crons": [{
+		"path": "/api/cleanup?auth=plsclearoldlogs",
+		"schedule": "0 0 * * *"
+	}]
+}
