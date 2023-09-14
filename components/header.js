@@ -31,7 +31,7 @@ export default function Header({level, user, updateRegex, negateRegex, updateLev
 			</div>
 
 			{user && <div className={styles.user}>
-				<Link href="/api/auth/logout"><a>Logout</a></Link>
+				<a href="/api/auth/logout">Logout</a>
 				<input title="Auth key" readOnly type="text" className={styles.key} value={user.key} onFocus={(e) => {
 					e.target.select()
 				}} onMouseUp={() => {return false}} />
