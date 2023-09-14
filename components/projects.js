@@ -12,6 +12,7 @@ function Projects({projectSelected}) {
 	const [currentProject, setCurrentProject] = useState(null)
 
 	async function fetchProjects() {
+		console.log('fetching projects')
 		const response = await fetch(`/api/projects`)
 		return await response.json()
 	}
@@ -27,9 +28,11 @@ function Projects({projectSelected}) {
 
 	useEffect(() => {
 		const cookieProject = getCookie('plog_project')
-		setCurrentProject(cookieProject)
-		projectSelected(cookieProject)
-	}, [])	
+		if (cookieProject) {
+			setCurrentProject(cookieProject)
+			projectSelected(cookieProject)
+		}
+	}, [])
 
 	return <select className={styles.projects_wrapper} value={currentProject || ''} onChange={selectProject}>
 		<option value={''}>Select project</option>
