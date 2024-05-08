@@ -32,11 +32,15 @@ function LogsWrapper({regex, negateRegex, levels}) {
 		return await response.json()
 	}
 
-	const pinnedLogsQuery = useQuery(['pinnedLogs', project], fetchPinnedLogs, {
+	const pinnedLogsQuery = useQuery({
+		queryKey: ['pinnedLogs', project],
+		queryFn: fetchPinnedLogs,
 		refetchInterval: false,
 	})
 
-	const logsQuery = useQuery(['logs', project], fetchLogs, {
+	const logsQuery = useQuery({
+		queryKey: ['logs', project],
+		queryFn: fetchLogs,
 		refetchInterval: () => {return clearing ? false : 500}
 	})
 

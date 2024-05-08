@@ -17,7 +17,10 @@ function Projects({projectSelected}) {
 		return await response.json()
 	}
 
-	const projectsQuery = useQuery(['projects'], fetchProjects, {})
+	const projectsQuery = useQuery({
+		queryKey: ['projects'],
+		queryFn: fetchProjects
+	})
 
 	function selectProject(e) {
 		const clickedProject = e.target.value
