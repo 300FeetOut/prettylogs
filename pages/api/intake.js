@@ -4,6 +4,8 @@ import {ManagementClient} from 'auth0'
 
 import {decrypt, encrypt} from '../../lib/encryption.js'
 
+export const runtime = 'edge'
+
 async function getManagementClient() {
 	const options = {
 		method: 'POST',

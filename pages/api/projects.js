@@ -2,6 +2,8 @@ import getClient from '../../lib/getClient'
 
 import {withApiAuthRequired, getSession} from '@auth0/nextjs-auth0'
 
+export const runtime = 'edge'
+
 export default withApiAuthRequired(async function handler(req, res) {
 	const session = await getSession(req, res)
 	const user = session.user

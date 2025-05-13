@@ -8,6 +8,8 @@ const afterCallback = (req, res, session, state) => {
 	return session
 }
 
+export const runtime = 'edge'
+
 export default handleAuth({
 	async callback(req, res) {
 		try {

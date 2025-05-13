@@ -1,5 +1,7 @@
 import getClient from '../../lib/getClient'
 
+export const runtime = 'edge'
+
 export default async function handler(req, res) {
 
 	if (req.query.auth != 'plsclearoldlogs') {
