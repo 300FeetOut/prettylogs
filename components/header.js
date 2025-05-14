@@ -8,6 +8,8 @@ import config from '../config'
 
 import Link from 'next/link'
 
+import { encrypt } from '@/lib/encryption'
+
 export default function Header({level, user, updateRegex, negateRegex, updateLevels}) {
 	const [levels, setLevels] = useState(config.levels)
 
@@ -31,8 +33,8 @@ export default function Header({level, user, updateRegex, negateRegex, updateLev
 			</div>
 
 			{user && <div className={styles.user}>
-				<Link href="/api/auth/logout">Logout</Link>
-				<input title="Auth key" readOnly type="text" className={styles.key} value={user.key} onFocus={(e) => {
+				<Link href="/auth/logout">Logout</Link>
+				<input title="Auth key" readOnly type="text" className={styles.key} value={encrypt(user.sub)} onFocus={(e) => {
 					e.target.select()
 				}} onMouseUp={() => {return false}} />
 			</div>}

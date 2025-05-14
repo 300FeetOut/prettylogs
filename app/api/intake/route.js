@@ -1,10 +1,10 @@
-import getClient from '../../lib/getClient'
+import getClient from '@/lib/getClient'
 
 import {ManagementClient} from 'auth0'
 
-import {decrypt, encrypt} from '../../lib/encryption.js'
+import {decrypt, encrypt} from '@/lib/encryption'
 
-export const runtime = 'edge'
+export const runtime = 'nodejs'
 
 async function getManagementClient() {
 	const options = {
@@ -29,17 +29,19 @@ async function getManagementClient() {
 	})
 }
 
-export default async function handler(req, res) {
+export async function POST(request) {
 	const managementClient = await getManagementClient()
-	const userId = decrypt(req.query.auth.trim())
+	const searchParams = request.nextUrl.searchParams
+	const auth = searchParams.get('auth')
+	const userId = decrypt(auth.trim())
 	try {
 		// Make sure user exists, else fail
 		await managementClient.getUser({id: userId})
 	} catch (e) {
-		return res.send('nope')
+		return new Response('nope', { status: 400 })
 	}
 
-	const projectName = req.query.project
+	const projectName = searchParams.get('project')
 
 	const client = await getClient()
 	const db = client.db('Prettylogs')
@@ -56,7 +58,7 @@ export default async function handler(req, res) {
 		project = {_id: insertedResponse.insertedId}
 	}
 
-	const logs = req.body
+	const logs = await request.json()
 	logs.map(log => {
 		log.project = project._id
 		log.stack_trace = JSON.parse(log.stack_trace)
@@ -69,5 +71,5 @@ export default async function handler(req, res) {
 
 	client.close()
 
-	res.send('ok')
+	return new Response('ok', { status: 200 })
 }

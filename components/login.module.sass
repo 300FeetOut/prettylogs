@@ -1,5 +1,6 @@
-@import "styles/config.sass"
-@import "styles/buttons.sass"
+@use "sass:color"
+@use "../styles/config.sass" as *
+@use "../styles/buttons.sass" as *
 
 .login
 	position: fixed
@@ -18,19 +19,19 @@
 			width: 20%
 		div:nth-child(1)
 			background-color: $error
-			border-top: 6px solid darken($error, 20%)
+			border-top: 6px solid color.adjust($error, $lightness: -20%)
 		div:nth-child(2)
 			background-color: $warning
-			border-top: 6px solid darken($warning, 20%)
+			border-top: 6px solid color.adjust($warning, $lightness: -20%)
 		div:nth-child(3)
 			background-color: $info
-			border-top: 6px solid darken($info, 20%)
+			border-top: 6px solid color.adjust($info, $lightness: -20%)
 		div:nth-child(4)
 			background-color: $notice
-			border-top: 6px solid darken($notice, 20%)
+			border-top: 6px solid color.adjust($notice, $lightness: -20%)
 		div:nth-child(5)
 			background-color: $critical
-			border-top: 6px solid darken($critical, 20%)
+			border-top: 6px solid color.adjust($critical, $lightness: -20%)
 
 	.login_content
 		padding: 50px 100px

@@ -13,7 +13,7 @@ export default function Login({level, user}) {
 				<div></div>
 			</div>
 			<div className={styles.login_content}>
-				<Link href="/api/auth/login">Log in</Link>
+				<Link href="/auth/login">Log in</Link>
 			</div>
 		</div>
 	)

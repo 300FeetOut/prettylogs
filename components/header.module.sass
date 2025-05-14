@@ -1,5 +1,6 @@
-@import "styles/config.sass"
-@import "styles/buttons.sass"
+@use "sass:color"
+@use "../styles/config.sass" as *
+@use "../styles/buttons.sass" as *
 
 .header
 	position: fixed
@@ -43,29 +44,29 @@
 				background-image: $level_checkbox
 			&.error_level
 				background-color: $error
-				border-top: 12px solid darken($error, 20%)
+				border-top: 12px solid color.adjust($error, $lightness: -20%)
 				&:hover
-					background-color: darken($error, 10%)
+					background-color: color.adjust($error, $lightness: -10%)
 			&.warning_level
 				background-color: $warning
-				border-top: 12px solid darken($warning, 20%)
+				border-top: 12px solid color.adjust($warning, $lightness: -20%)
 				&:hover
-					background-color: darken($warning, 10%)
+					background-color: color.adjust($warning, $lightness: -10%)
 			&.info_level
 				background-color: $info
-				border-top: 12px solid darken($info, 20%)
+				border-top: 12px solid color.adjust($info, $lightness: -20%)
 				&:hover
-					background-color: darken($info, 10%)
+					background-color: color.adjust($info, $lightness: -10%)
 			&.notice_level
 				background-color: $notice
-				border-top: 12px solid darken($notice, 20%)
+				border-top: 12px solid color.adjust($notice, $lightness: -20%)
 				&:hover
-					background-color: darken($notice, 10%)
+					background-color: color.adjust($notice, $lightness: -10%)
 			&.critical_level
 				background-color: $critical
-				border-top: 12px solid darken($critical, 20%)
+				border-top: 12px solid color.adjust($critical, $lightness: -20%)
 				&:hover
-					background-color: darken($critical, 10%)
+					background-color: color.adjust($critical, $lightness: -10%)
 
 	div.search
 		width: 320px

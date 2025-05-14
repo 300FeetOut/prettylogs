@@ -1,4 +1,5 @@
-@import "styles/config.sass"
+
+@use "../styles/config.sass" as *
 
 .log
 	margin: 10px
@@ -186,8 +187,6 @@
 			background: $toggle_icon_more no-repeat bottom center
 			&.expanded
 				background: $toggle_icon_x no-repeat bottom center
-
-		div.text
 
 	&.even
 		background-color: $log_background_color_alt
