@@ -87,7 +87,6 @@ function Logs({refetch, regex, negateRegex, levels, pinned, logs}) {
 		refetch()
 	}
 
-
 	function toggleStackTrace(e) {
 		stackTraceRef.current.classList.toggle(styles.expand)
 	}
