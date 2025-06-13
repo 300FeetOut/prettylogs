@@ -14,6 +14,7 @@ import prettyPrint from "../lib/prettyPrint"
 
 function Logs({refetch, regex, negateRegex, levels, pinned, logs}) {
 	const logsRef = useRef(null)
+	const stackTraceRef = useRef(null)
 
 	useEffect(() => {
 		const logWrapper = logsRef.current
@@ -88,17 +89,7 @@ function Logs({refetch, regex, negateRegex, levels, pinned, logs}) {
 
 
 	function toggleStackTrace(e) {
-		const element = _.find(e.nativeEvent.path, (elem) => {
-			return elem.classList.contains(styles.stack_trace)
-		})
-
-		if (element) {
-			if (element.classList.contains(styles.expand)) {
-				element.classList.remove(styles.expand)
-			} else {
-				element.classList.add(styles.expand)
-			}
-		}
+		stackTraceRef.current.classList.toggle(styles.expand)
 	}
 
 	function prepareLog(log) {
@@ -176,7 +167,7 @@ function Logs({refetch, regex, negateRegex, levels, pinned, logs}) {
 					{preparedLog.referrer}
 				</div>
 
-				{preparedLog.stack_trace && !!preparedLog.stack_trace.length && <div onClick={toggleStackTrace} title="Expand stack" className={classNames(styles.stack_trace)}>
+				{preparedLog.stack_trace && !!preparedLog.stack_trace.length && <div ref={stackTraceRef} onClick={toggleStackTrace} title="Expand stack" className={classNames(styles.stack_trace)}>
 					{preparedLog.stack_trace.map((trace, i) => {
 						return <div key={i} className={styles.line}>
 							<div className={styles.identifying_info}>
