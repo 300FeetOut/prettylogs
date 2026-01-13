@@ -12,7 +12,6 @@ function Projects({projectSelected}) {
 	const [currentProject, setCurrentProject] = useState(null)
 
 	async function fetchProjects() {
-		console.log('fetching projects')
 		const response = await fetch(`/api/projects`)
 		return await response.json()
 	}
