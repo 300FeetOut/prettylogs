@@ -120,7 +120,8 @@ const LogItem = memo(function LogItem({ log, styles, onPin, pinned }) {
 		<div 
 			ref={logRef}
 			data-created={preparedLog.created} 
-			className={classNames(styles.log, styles[preparedLog.level], styles.pinned)}
+			className={classNames('log', styles.log, styles[preparedLog.level], styles.pinned)}
+			id={`log-${preparedLog._id}`}
 		>
 			<div className={styles.pin} title={pinned ? "Unpin" : "Pin this log message"} onClick={() => onPin(preparedLog)}>Pin</div>
 
@@ -179,32 +180,6 @@ const LogItem = memo(function LogItem({ log, styles, onPin, pinned }) {
 
 function Logs({refetch, regex, negateRegex, levels, pinned, logs}) {
 	const logsRef = useRef(null)
-
-	useEffect(() => {
-		const logWrapper = logsRef.current
-		if (!logWrapper) return
-
-		let interval = null
-		if (!pinned) {
-			interval = setInterval(() => {
-				if (!logsRef || !logWrapper) {
-					return
-				}
-		
-				const logElements = [...logWrapper.querySelectorAll(`.${styles.log}`)]
-				const now = Date.now()
-		
-				logElements.length && logElements.map((logElement) => {
-					const percent = (now - logElement.dataset.created) / (1000 * 60 * 5 /*5 minutes*/)
-					logElement.style.opacity = Math.max(.3, 1 - percent)
-				})
-			}, 1000)
-		}
-
-		return () => {
-			clearInterval(interval)
-		}
-	}, [pinned, styles.log])
 
 	const pin = useCallback(async (log) => {
 		const response = await fetch(`/api/pin?_id=${log._id}&pin=${log.pinned ? 0 : 1}`)
